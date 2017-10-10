@@ -53,6 +53,7 @@
 							<li><a href="#shuffle">shuffle</a></li>
 							<li><a href="#sizzle">sizzle</a></li>
 							<li><a href="#noteLength">noteLength</a></li>
+							<li><a href="#arpegiate">arpegiate</a></li>
 						</ul>
 					</li>
 					<li><a href="#scale">scale/mode</a></li>
@@ -180,6 +181,31 @@ scribble.midi(clip1.concat(clip2, 'music.mid'));</code></pre>
 					<p>Then we concatenate both the clips and render as a single MIDI file. Here's how it looks in a piano roll (note the 2 highlighted notes - they are 1/32 of a beat whereas the rest are 1/16th)</p>
 					<p><img src="images/thirtytwo.png"></p>
 					<p>One thing to ensure while playing with the note length is, if you reduce the note length (like the above example) then you must make sure that the final clip length continues to be like a full length 16 beat bar. In other words, reducing the note length also reduces the length of the bar by half which means you must have a doubled pattern to compensate!</p>
+				</div>
+				<div id="arpegiate" class="section">
+					<h4>arpegiate {Boolean|Object}</h4>
+					<p>When you create a clip, you can chose to arpegiate the notes. Setting it simply <em>true</em> will arpegiate notes by alternating them to their octaves (a distance of 12 half steps).</p>
+<pre><code class="js">var scribble = require('scribbletune');
+var clip = scribble.clip({
+	notes: 'c3',
+	pattern: 'x_'.repeat(8),
+	arpegiate: true
+});
+
+scribble.midi(clip);</code></pre>
+				<p>You can change this by setting up a custom distance and number of steps in a object. Instead of a Boolean, pass an Object with steps and distance. In the following example, we set a distance of 7 (to simulate a circle of fifths) and steps are set to 11:</p>
+<pre><code class="js">var scribble = require('scribbletune');
+var clip = scribble.clip({
+	notes: 'c3',
+	pattern: 'x_'.repeat(8),
+	arpegiate: {
+		distance: 7,
+		steps: 11
+	}
+});
+
+scribble.midi(clip);</code></pre>
+				</p>
 				</div>
 
 				<div id="scale" class="section">
