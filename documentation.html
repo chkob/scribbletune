@@ -212,24 +212,23 @@ scribble.midi(clip);</code></pre>
 					<h2>scale/mode <span class="meta pull-right">returns: Array</span></h2>
 					<p>A <em>scale</em> is a set of musical notes ordered by pitch. A displaced order of a scale is also called a <em>mode</em>. Scribbletune exports the same method as <em>scale</em> as well as <em>mode</em></p>
 
-					<p>The <em>scale</em> method takes 4 optional parameters. Without any parameters, Scribble tune will output a C major scale. To customize it, you can pass the following parameters:</p>
+					<p>The <em>scale</em> method takes 2 mandatory + 2 optional parameters:</p>
 					<ul>
-						<li>root {String} default: C</li>
-						<li>scale {String} default: major</li>
+						<li>root {String}</li>
+						<li>scale {String}</li>
 						<li>octave {Number} default: 4</li>
 						<li>addRootFromNextOctave {Boolean} default: true</li>
 					</ul>
 					<pre><code class="js">var scribble = require('scribbletune');
 
 // Create a clip that plays the middle C
-var cMajor = scribble.scale(); // [ 'c3', 'd3', 'e3', 'f3', 'g3', 'a3', 'b3', 'c4' ]
-var cMinor = scribble.scale('c minor'); // [ 'c3', 'd3', 'd#3', 'f3', 'g3', 'g#3', 'a#3', 'c4' ]
+var cMinor = scribble.scale('c minor'); // [ 'c4', 'd4', 'd#4', 'f4', 'g4', 'g#4', 'a#4', 'c5' ]
 
 // The scale method can also be refered to as `mode`
-cMinor = scribble.mode('c minor'); // [ 'c3', 'd3', 'd#3', 'f3', 'g3', 'g#3', 'a#3', 'c4' ]
+cMinor = scribble.mode('c minor'); // [ 'c4', 'd4', 'd#4', 'f4', 'g4', 'g#4', 'a#4', 'c5' ]
 
 // That's the same as
-cMinor = scribble.mode('c aeolian 3'); // [ 'c3', 'd3', 'd#3', 'f3', 'g3', 'g#3', 'a#3', 'c4' ]
+cMinor = scribble.mode('c aeolian 4'); // [ 'c4', 'd4', 'd#4', 'f4', 'g4', 'g#4', 'a#4', 'c5' ]
 
 // You can even set it as individual params if you like,
 cMinor = scribble.mode('c', 'aeolian', 3); // [ 'c3', 'd3', 'd#3', 'f3', 'g3', 'g#3', 'a#3', 'c4' ]</code></pre>
