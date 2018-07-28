@@ -1,18 +1,19 @@
 body {
 	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
-	font-size: 14px;
+	font-size: 18px;
+	color: #1f2328;
+	background: url(images/st-swatches.png);
+	background-position: top;
+	background-repeat: repeat-x;
 }
 
-.brand {
-	font-family: 'Pacifico', sans-serif;
-}
 
 a, a:visited {
-	color: #FF4D4D;
+	color: #ed5353;
 }
 
 a:hover {
-	color: #FF3333;
+	color: #cc3333;
 }
 
 pre {
@@ -24,8 +25,32 @@ pre {
 	margin-bottom: 10px;
 }
 
+.top-bar {
+	margin: 20px 0 60px 20px;
+}
+
+.logo {
+	height: 74px;
+	margin: 20px auto;
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	background-image: url("images/logo-with-tagline.png");
+	background-size: 310px;
+	background-repeat: no-repeat;
+	background-position: left;
+}
+
 .hero {
-	font-size: 1.5em;
+	font-size: 2em;
+}
+
+.heros-friend {
+	font-size: 1.2em;
+}
+
+.hero, .heros-friend {
+	margin-bottom: 30px;
 }
 
 .meta {
@@ -44,6 +69,7 @@ pre {
 ul.api-menu a {
 	padding: 5px;
 	display: inline-block;
+	color: #379e97;
 }
 
 ul.api-menu .selected {
@@ -56,6 +82,14 @@ ul.api-sub-menu a {
 
 .section {
 	margin-bottom: 40px; 
+}
+
+.section h2 {
+	color: #ed5353;
+}
+
+.section h2 span {
+	color: #1f2328;
 }
 
 .section h4 {
