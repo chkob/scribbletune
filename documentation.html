@@ -15,7 +15,7 @@
 	<!-- Bootstrap Core CSS -->
 	<link rel="stylesheet" href="bootstrap.min.css" type="text/css">
 	<link rel="stylesheet" href="style.css" type="text/css">
-	<link rel="stylesheet" href="zenburn.min.css">
+	<link rel="stylesheet" href="pretty.css" type="text/css">
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
@@ -23,18 +23,16 @@
 		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
-	<script src="highlight.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
-
+	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=js"></script>
 </head>
 
-<body>
+<body class="page">
 	<div class="container-fluid top-bar">
 		<a href='/'>
 			<h1 class="logo">Scribbletune</h1>
 		</a>
 	</div>
-	<div class="container col-md-8 col-md-push-2 col-lg-8 col-lg-push-2">
+	<div class="container col-md-10 col-md-push-1 col-lg-8 col-lg-push-2">
 		<div>
 			<p class="hero">Scribbletune has a very minimal API.</p>
 			<p class="heros-friend">The work flow involves creating clips which are containers for musical ideas. Once a clip is created, it can be concatenated with other clips to create longer musical ideas (or songs).  You can then, either export the clip as a MIDI file or play it in the browser.</p>
@@ -48,13 +46,7 @@
 						<ul class="api-sub-menu">
 							<li><a href="#notes">notes</a></li>
 							<li><a href="#pattern">pattern</a></li>
-							<li><a href="#accentMap">accentMap</a></li>
-							<li><a href="#accentHi">accentHi</a></li>
-							<li><a href="#accentLow">accentLow</a></li>
 							<li><a href="#shuffle">shuffle</a></li>
-							<li><a href="#sizzle">sizzle</a></li>
-							<li><a href="#noteLength">noteLength</a></li>
-							<li><a href="#arpegiate">arpegiate</a></li>
 						</ul>
 					</li>
 					<li><a href="#scale">scale/mode</a></li>
@@ -70,12 +62,12 @@
 					<p>A clip is a like a measure of music. It can be a single bar or two bars or how many ever bars you need. In <abbr title="Digital Audio Workstation">DAW</abbr>s such as Ableton Live and Propellerhead Reason, a clip is what you create in the session or arrangement view to capture a musical idea.</p>
 
 					<p>The <em>clip</em> method takes an object literal as an argument. This object lets you define the parameters of that clip. Here is an example of the <em>clip</em> method being called with an object that sets up the most basic properties of the <em>clip</em>:</p>
-					<pre><code class="js">var scribble = require('scribbletune');
+					<pre class="prettyprint"><code>var scribble = require('scribbletune');
 
 // Create a clip that plays the middle C
 var clip = scribble.clip({
 	notes: 'c4',
-	pattern: 'x________________'
+	pattern: 'x'
 });
 
 // Render a MIDI file of this clip
@@ -84,12 +76,12 @@ scribble.midi(clip, 'c.mid');</code></pre>
 				<div id="notes" class="section">
 					<h4>notes {String|Array}</h4>
 					<p>This property lets you set up the notes we want to play in the clip. You can enter notes manually or use the built-in scale/mode method to generate notes from a scale and further mangle them into an array. For instance, in the preceding example we set the 'c4' note as the only note to be played across a pattern. You can even set up a bunch of notes:</p>
-					<pre><code class="js">var scribble = require('scribbletune');
+					<pre class="prettyprint"><code>var scribble = require('scribbletune');
 
 // Create a clip that plays the C major scale
 var clip = scribble.clip({
-	notes: 'c4 d4 e4 f4 g4 a4 b4 c5', // Or ['c4', 'd4', 'e4', 'f4', 'g4', 'a4', 'b4', 'c5']
-	pattern: 'x_x_x_x_x_x_x_x_'
+	notes: 'c4 d4 e4 f4 g4 a4 b4 c5', // Or ['c4', 'd4', 'e4' ...]
+	pattern: 'x'.repeat(8)
 });
 
 // Render a MIDI file of this clip
@@ -99,53 +91,15 @@ scribble.midi(clip, 'cscale.mid');</code></pre>
 				<div id="pattern" class="section">
 					<h4>pattern {String}</h4>
 					<p>This is the second most important parameter for the clip method's object. It abstracts away the <abbr title="Musical Instrument Digital Interface">MIDI</abbr> <em>note on</em> and <em>note off</em> events along with the individual note durations into a nifty 3 character instruction language made up only of <strong>x</strong>, <strong>-</strong>(hyphen) and <strong>_</strong>(underscore). This is native to Scribbletune and it's used in multiple ways across the Scribbletune library. But maybe we are making it too complex to understand, here's an example of what a pattern looks like and what it means:</p>
-<pre><code class="bash">x---x---x---x---</code></pre>
+<pre class="prettyprint"><code class="bash">xxxx</code></pre>
 					<p>This pattern is akin to what would look like the following in a DAW:</p>
 					<p><img src="images/4x4.png"></p>
 					<p>As you can deduce, each x implies a <em>note on</em> event (hence shows a note in the piano roll when imported) and each hyphen implies a <em>note off</em> event which does not have any note in that location in the 16 beat clip. Other than setting <em>note on</em> and off events, we can even set the duration of a <em>note on</em> event using the pattern language's third and final character: <strong>_</strong> (underscore) character instead:</p>
-<pre><code class="bash">x__-x__-x__-x__-</code></pre>
+<pre class="prettyprint"><code class="bash">x__-x__-x__-x__-</code></pre>
 					<p>Here we replaced 2 hyphens after each <strong>x</strong> with underscores. An underscores implies a sustain to the preceding x. More underscores imply more sustain of the preceding <strong>x</strong>. Here's how it now looks in a piano roll:</p>
 					<p><img src="images/4x4_.png"></p>
 
 					<p>Basically the underscores just extended the <em>notes</em> set up by the <strong>x</strong> character. These are really simply examples but you can do a lot with patterns! The <a href="examples.html">examples section</a> showcase a lot more patterns and how they are useful when creating complex melodies or chord progressions. You can <a href="patterns.html">try out some patterns</a> and see how they look on a 16 beat grid.</p>
-				</div>
-				<div id="accentMap" class="section">
-					<h4>accentMap {String | Array}</h4>
-					<p>An accent map is a way for you to tell the clip method to hit some notes harder than the others. It's a string of x and - (hyphen) characters. An <strong>x</strong> implies hit harder and a <strong>-</strong> (hyphen) implies hit softer.</p>
-					<p>Here's how you use an accent map. In the following example, we have a pattern that instructs Scribbletune's clip method to create a <em>note on</em> each beat on a 16 beat bar. Then it goes on to set up an accentMap parameter that instructs which of the notes to hit harder <strong>x</strong> and which to hit softer<strong>-</strong></p>
-					<pre><code class="js">var scribble = require('scribbletune');
-
-var clip = scribble.clip({
-	notes: 'c3',
-	pattern: 'xxxxxxxxxxxxxxxx',
-	accentMap: 'x---x-x-x---x-x-'
-});
-
-scribble.midi(clip, 'hats.mid');</code></pre>
-					<p>Here's how that looks in a piano roll. The vertical lines on the bottoms suggest the volume of each note. They co-incide with the accentMap we setup:</p>
-					<p><img src="images/accentMap.png"></p>
-					<p><em>accentMap</em> can be set up by individual note values as well. You can pass an array of numbers that will be applied to each of the notes.</p>
-					<pre><code class="js">var scribble = require('scribbletune');
-
-	var clip = scribble.clip({
-		notes: 'c4',
-		pattern: 'x'.repeat(16),
-		accentMap: [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 127, 127, 127]
-	});
-
-	scribble.midi(clip);</code></pre>
-					<p>Here's how that looks. As you can see, the gradual change in the color of the note as well as the vertical lines on the bottom suggest the upward rise in the levels setup by our Number Array.</p>
-					<p><img src="images/accentMapNum.png"></p>
-				</div>
-
-				<div id="accentHi" class="section">
-					<h4>accentHi {Number} default 127</h4>
-					<p>In case you used a string to setup an <em>accentMap</em>, then this property lets you define the level for each <strong>x</strong>.</p>
-				</div>
-
-				<div id="accentLow" class="section">
-					<h4>accentLow {Number} default 70</h4>
-					<p>In case you used a string to setup an <em>accentMap</em>, then this property lets you define the level for each <strong>-</strong>.</p>
 				</div>
 
 				<div id="shuffle" class="section">
@@ -153,65 +107,14 @@ scribble.midi(clip, 'hats.mid');</code></pre>
 					<p>Setting this property will randomize the order of the notes you set in the clip method.</p>
 				</div>
 
-				<div id="sizzle" class="section">
+				<!-- <div id="sizzle" class="section">
 					<h4>sizzle {Boolean}</h4>
 					<p>While accentMaps are great to wire up a individual note levels in a very controlled fashion, 'sizzle' lets you quickly add a bouncy feel to the clip by using Math.sin on the angles of a semi circle multiplied by the max level of 127.</p>
-				</div>
-
-				<div id="noteLength" class="section">
-					<h4>noteLength {String}</h4>
-					<p>By default each bar is 16 beats long. In other words each beat is 1/16th of a bar. This can be changed by setting another fraction for the smallest note length. Valid values are 1/4, 1/8, 1/16 (default), 1/32 etc. For instance in the following example, we are leaving the default (1/16) for one clip and setting it to 1/32 for another clip.</p> 
-<pre><code class="js">var scribble = require('scribbletune');
-
-// Create a clip that occupies the first 12 notes of a 16 beat bar
-var clip1 = scribble.clip({
-	notes: 'c4',
-	pattern: 'x'.repeat(12)
-});
-
-// Create another clip that occupies the last 4 notes of a 16 beat bar
-// Since we are reducing the note length by half, we will double the pattern length
-var clip2 = scribble.clip({
-	notes: 'c4',
-	pattern: 'x_xxx_x_',
-	noteLength: '1/32'
-});
-
-// Concatenate both the clips and render a single MIDI file
-scribble.midi(clip1.concat(clip2, 'music.mid'));</code></pre>
-					<p>Then we concatenate both the clips and render as a single MIDI file. Here's how it looks in a piano roll (note the 2 highlighted notes - they are 1/32 of a beat whereas the rest are 1/16th)</p>
-					<p><img src="images/thirtytwo.png"></p>
-					<p>One thing to ensure while playing with the note length is, if you reduce the note length (like the above example) then you must make sure that the final clip length continues to be like a full length 16 beat bar. In other words, reducing the note length also reduces the length of the bar by half which means you must have a doubled pattern to compensate!</p>
-				</div>
-				<div id="arpegiate" class="section">
-					<h4>arpegiate {Boolean|Object}</h4>
-					<p>When you create a clip, you can chose to arpegiate the notes. Setting it simply <em>true</em> will arpegiate notes by alternating them to their octaves (a distance of 12 half steps).</p>
-<pre><code class="js">var scribble = require('scribbletune');
-var clip = scribble.clip({
-	notes: 'c3',
-	pattern: 'x_'.repeat(8),
-	arpegiate: true
-});
-
-scribble.midi(clip);</code></pre>
-				<p>You can change this by setting up a custom distance and number of steps in a object. Instead of a Boolean, pass an Object with steps and distance. In the following example, we set a distance of 7 (to simulate a circle of fifths) and steps are set to 11:</p>
-<pre><code class="js">var scribble = require('scribbletune');
-var clip = scribble.clip({
-	notes: 'c3',
-	pattern: 'x_'.repeat(8),
-	arpegiate: {
-		distance: 7,
-		steps: 11
-	}
-});
-
-scribble.midi(clip);</code></pre>
-				</p>
-				</div>
+				</div> -->
 
 				<div id="scale" class="section">
 					<h2>scale/mode <span class="meta pull-right">returns: Array</span></h2>
-					<p>A <em>scale</em> is a set of musical notes ordered by pitch. A displaced order of a scale is also called a <em>mode</em>. Scribbletune exports the same method as <em>scale</em> as well as <em>mode</em></p>
+					<p>A <em>scale</em> is a set of musical notes ordered by pitch. A displaced order of a scale is also called a <em>mode</em>. Scribbletune exports the same method as <em>scale</em> as well as <em>mode</em>.</p>
 
 					<p>The <em>scale</em> method takes 2 mandatory + 2 optional parameters:</p>
 					<ul>
@@ -220,19 +123,16 @@ scribble.midi(clip);</code></pre>
 						<li>octave {Number} default: 4</li>
 						<li>addRootFromNextOctave {Boolean} default: true</li>
 					</ul>
-					<pre><code class="js">var scribble = require('scribbletune');
+					<pre class="prettyprint"><code>var scribble = require('scribbletune');
 
 // Create a clip that plays the middle C
-var cMinor = scribble.scale('c minor'); // [ 'c4', 'd4', 'd#4', 'f4', 'g4', 'g#4', 'a#4', 'c5' ]
+var cMinor = scribble.scale('c4 minor'); // [ 'c4', 'd4', 'd#4' ... ]
 
 // The scale method can also be refered to as `mode`
-cMinor = scribble.mode('c minor'); // [ 'c4', 'd4', 'd#4', 'f4', 'g4', 'g#4', 'a#4', 'c5' ]
+cMinor = scribble.mode('c4 minor'); // [ 'c4', 'd4', 'd#4' ... ]
 
 // That's the same as
-cMinor = scribble.mode('c aeolian 4'); // [ 'c4', 'd4', 'd#4', 'f4', 'g4', 'g#4', 'a#4', 'c5' ]
-
-// You can even set it as individual params if you like,
-cMinor = scribble.mode('c', 'aeolian', 3); // [ 'c3', 'd3', 'd#3', 'f3', 'g3', 'g#3', 'a#3', 'c4' ]</code></pre>
+cMinor = scribble.mode('c4 aeolian'); // [ 'c4', 'd4', 'd#4', 'f4' ...]</code></pre>
 
 					<p>There are a bunch of scales and modes available in Scribbletune. You can list the available modes by invoking the <em>modes</em> method. To view a list now, <a href="https://github.com/walmik/scribbletune/blob/master/src/modes.js">click here</a>.</p>
 				</div>
@@ -242,28 +142,29 @@ cMinor = scribble.mode('c', 'aeolian', 3); // [ 'c3', 'd3', 'd#3', 'f3', 'g3', '
 					<p>As the name suggests, the <em>midi</em> method generates a MIDI file from it's input. It takes 1 mandatory and 1 optional parameter:</p>
 					<ol>
 						<li>clip {Array} The clip that you create using the <em>clip</em> method</li>
-						<li>filename {String} This is optional. If you don't provide a filename, Scribbletune will create a file called <em>music.mid</em></li>
+						<li>filename {String} This is optional. If you don't provide a filename, Scribbletune will create a file called music.mid</li>
 					</ol>
-					<pre><code class="js">var scribble = require('scribbletune');
+					<pre class="prettyprint"><code>var scribble = require('scribbletune');
 
 var clip = scribble.clip({
 	notes: 'c4',
 	pattern: 'x_______'
 });
 
-scribble.midi(clip); // Will create a file called <em>music.mid</em>
+scribble.midi(clip); // Will create a file called music.mid
 // OR
-scribble.midi(clip, 'c.mid'); // Will create a file called <em>c.mid</em></code></pre>
+scribble.midi(clip, 'c.mid'); // Will create a file called c.mid</code></pre>
 				</div>
 
 				<div id="chord" class="section">
 					<h2>chord</h2>
 					<p>Scribbletune recognizes chords by their commonly used names. For instance here is a chord progression set up via chord names:</p>
-					<pre><code class="js">var scribble = require('scribbletune');
+					<pre class="prettyprint"><code>var scribble = require('scribbletune');
 
 var clip = scribble.clip({
 	// Use chord names directly in the notes array
-	notes: 'CMaj, FMaj, GMaj, CMaj',
+	// M stands for Major, m stands for minor
+	notes: 'CM FM GM CM',
 	pattern: 'x---'.repeat(4)
 });
 
@@ -271,28 +172,21 @@ var clip = scribble.clip({
 scribble.midi(clip, 'chords.mid');</code></pre>
 					<p>Here's how that looks on a piano roll when imported into a DAW</p>
 					<img src="images/chords.png">
-					<p>Other than recognizing chords in a notes array, Scribbletune also has a method to get a particular chord as an array of notes from that chord:</p>
-					<pre><code class="js">var scribble = require('scribbletune');
-var cMajorChord = scribble.chord('CMaj'); // [ 'c4', 'e4', 'g4' ]</code></pre>
+					<p>Other than recognizing chords in a notes array, Scribbletune uses Tonal.js to get a particular chord as an array of notes from that chord:</p>
+					<pre class="prettyprint"><code>var scribble = require('scribbletune');
+var cMajorChord = scribble.chord('CM'); // [ 'c4', 'e4', 'g4' ]</code></pre>
+					<p>To get the chord on a particular octave, just append a hyphen and a number:</p>
+					<pre class="prettyprint"><code>var scribble = require('scribbletune');
+var cMajorChord = scribble.chord('CM-5'); // [ 'c5', 'e5', 'g5' ]</code></pre>
 					<p>Lastly, you can get an array of the available chords by calling the getChords method:</p>
-					<pre><code class="js">var scribble = require('scribbletune');
-var availableChords = scribble.listChords(); // Lists all available chords</code></pre>
-					<p>Here is a list of all the available chords in Scribbletune with their alternative names:</p>
-					<ul>
-						<li>6th | Sixth | sixth</li>
-						<li>maj | Maj</li>
-						<li>min | Min | m</li>
-						<li>sus2 | Sus2</li>
-						<li>sus4 | Sus4</li>
-						<li>maj7 | Maj7</li>
-						<li>min7 | Min7</li>
-						<li>dom7 | Dom7 | 7th</li>
-						<li>dim | Dim</li>
-						<li>dim7 | Dim7</li>
-						<li>aug | Aug</li>
-					</ul>
+					<pre class="prettyprint"><code>var scribble = require('scribbletune');
+var availableChords = scribble.chords(); // Lists all available chords</code></pre>
 				</div>
-
+				<hr>
+				<div>
+					If you like this project then show your &#10084; <a href="#">Star this project</a> on Github!
+				</div>
+				<br>
 			</div> <!-- content -->
 		</div>
 
@@ -306,13 +200,13 @@ var availableChords = scribble.listChords(); // Lists all available chords</code
 		});
 	</script>
 	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		// (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		// 	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		// 	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		// })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 		
-		ga('create', 'UA-8347688-20', 'auto');
-		ga('send', 'pageview');
+		// ga('create', 'UA-8347688-20', 'auto');
+		// ga('send', 'pageview');
 	</script>
 </body>
 
